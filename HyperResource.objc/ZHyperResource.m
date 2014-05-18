@@ -97,6 +97,11 @@ NSString *const HalTemplated = @"templated";
         dispatch_semaphore_signal(semaphore);
     }];
     
+    if (error)
+    {
+        NSLog(@"We had an error");
+    }
+    
     [operation waitUntilFinished];
     
     while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW))
