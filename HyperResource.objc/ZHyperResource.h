@@ -11,7 +11,7 @@ FOUNDATION_EXPORT NSString *const HalLinks;
 FOUNDATION_EXPORT NSString *const HalHref;
 FOUNDATION_EXPORT NSString *const HalTemplated;
 
-@interface ZHyperResource : NSObject
+@interface ZHyperResource : NSObject <NSCopying>
 
 + (instancetype)resourceWithRoot:(NSString *)root;
 

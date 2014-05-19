@@ -59,6 +59,9 @@ NSString *const HalTemplated = @"templated";
     return hyperResource;
 }
 
+//+ (id)copyWithZone:(struct _NSZone *)zone{
+//}
+
 - (instancetype)childResource{
     ZHyperResource *hyperResource = [[ZHyperResource alloc]init];
     hyperResource.root = self.root;
@@ -128,18 +131,44 @@ NSString *const HalTemplated = @"templated";
 }
 
 - (RACSignal *)rac_GET:(NSDictionary *)parameters {
-    if (!self.loaded){
-        NSString *path = nil;
-        NSDictionary *params = nil;
-        @weakify(self)
-        return [[self.httpRequestOperationManager rac_GET:path parameters:params] map:^id(NSDictionary *json) {
-            @strongify(self)
-            [self parseHAL:json];
-            return self;
+    @weakify(self);
+    return [RACSignal createSignal:^(id<RACSubscriber> subscriber) {
+        @strongify(self);
+        
+        if (self.loaded)
+        {
+            [subscriber sendNext:self];
+            [subscriber sendCompleted];
+        }
+        else
+        {
+            NSString *path = nil;
+            NSDictionary *params = nil;
+            [self.httpRequestOperationManager GET:path parameters:params success:^(AFHTTPRequestOperation *_, id json) {
+                @strongify(self)
+                
+                [self parseHAL:json];
+                [subscriber sendNext:self];
+                [subscriber sendCompleted];
+                
+            } failure:^(AFHTTPRequestOperation *_, NSError *err) {
+                
+                [subscriber sendError:err];
+                
+            }];
+        }
+        
+        return [RACDisposable disposableWithBlock:^{
+            //@strongify(self);
+            
+            // If you need to cancel the HTTP request when
+            // the signal subscription is disposed, you do
+            // it in this block. If you don't need to do
+            // anything, you can return nil instead of a
+            // disposable that has nothing in its block.
+            
         }];
-    } else {
-        return [RACSignal return:self];
-    }
+    }];
 }
 
 #pragma mark - 
