@@ -126,6 +126,18 @@ NSString *const HalTemplated = @"templated";
     return self;
 }
 
+- (RACSignal *)rac_GET:(NSDictionary *)parameters {
+    RACSignal *signal = self;
+    
+    if (!self.loaded){
+        NSString *path = nil;
+        NSDictionary *params = nil;
+        return [self.httpRequestOperationManager rac_GET:path parameters:params];
+    }
+    
+    return signal;
+}
+
 #pragma mark - 
 
 - (void)setHref:(NSString *)href{
