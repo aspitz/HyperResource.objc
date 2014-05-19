@@ -10,6 +10,7 @@
 #import <libextobjc/extobjc.h>
 #import <AFNetworking/AFNetworking.h>
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 NSString *const HalEmbedded = @"_embedded";
 NSString *const HalLinks = @"_links";
@@ -127,15 +128,18 @@ NSString *const HalTemplated = @"templated";
 }
 
 - (RACSignal *)rac_GET:(NSDictionary *)parameters {
-    RACSignal *signal = self;
-    
     if (!self.loaded){
         NSString *path = nil;
         NSDictionary *params = nil;
-        return [self.httpRequestOperationManager rac_GET:path parameters:params];
+        @weakify(self)
+        return [[self.httpRequestOperationManager rac_GET:path parameters:params] map:^id(NSDictionary *json) {
+            @strongify(self)
+            [self parseHAL:json];
+            return self;
+        }];
+    } else {
+        return [RACSignal return:self];
     }
-    
-    return signal;
 }
 
 #pragma mark - 
