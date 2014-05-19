@@ -5,13 +5,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 FOUNDATION_EXPORT NSString *const HalEmbedded;
 FOUNDATION_EXPORT NSString *const HalLinks;
 FOUNDATION_EXPORT NSString *const HalHref;
 FOUNDATION_EXPORT NSString *const HalTemplated;
 
-@interface ZHyperResource : NSObject
+@interface ZHyperResource : RACSignal
 
 + (instancetype)resourceWithRoot:(NSString *)root;
 

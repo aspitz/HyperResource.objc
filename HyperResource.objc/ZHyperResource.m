@@ -9,6 +9,7 @@
 
 #import <libextobjc/extobjc.h>
 #import <AFNetworking/AFNetworking.h>
+#import <AFNetworking-RACExtensions/RACAFNetworking.h>
 
 NSString *const HalEmbedded = @"_embedded";
 NSString *const HalLinks = @"_links";

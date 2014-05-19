@@ -1,3 +1,5 @@
 platform :ios, '7.0'
 pod 'libextobjc', '~> 0.4'
 pod 'AFNetworking', '~> 2.2'
+pod 'AFNetworking-RACExtensions', '~> 0.1'
+pod 'ReactiveCocoa', '~> 2.3'
